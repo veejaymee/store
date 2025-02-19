@@ -32,21 +32,30 @@ This project is a **Spring Boot-based REST API** for managing an online store. I
 - Implemented a **CI/CD pipeline** for automating build, test, and deployment processes.
 
 ## API Endpoints 📡
-
+![all-services.png](ScreenShots/all-services.png)
 ### Order Endpoints
 - `GET /v1/api/order` – Retrieve all orders (paginated).
+- ![orders-all.png](ScreenShots/orders-all.png)
 - `GET /v1/api/order/{orderId}` – Retrieve a specific order by ID.
+- ![order-by-id.png](ScreenShots/order-by-id.png)
 - `POST /v1/api/order` – Create new Order.
+- ![order-create.png](ScreenShots/order-create.png)
 
 ### Customer Endpoints
-- `GET /v1/api/customer` – Retrieve customers matching a substring in their name.
+- `GET /v1/api/customer` – Retrieve customers.
+- ![customers-all.png](ScreenShots/customers-all.png)
 - `POST /v1/api/customer` – Create new Customer.
+- ![customers-create.png](ScreenShots/customers-create.png)
 - `GET /v1/api/customer/{name}` – Search by Customer Name.
+- ![customers-search-by-name.png](ScreenShots/customers-search-by-name.png)
 
 ### Product Endpoints
 - `POST /v1/api/product` – Create a new product.
+- ![product-create.png](ScreenShots/product-create.png)
 - `GET /v1/api/product` – Retrieve all products.
+- ![product-all.png](ScreenShots/product-all.png)
 - `GET /v1/api/product/{productId}` – Retrieve a specific product by ID, including the orders it appears in.
+- ![product-by-id.png](ScreenShots/product-by-id.png)
 
 ## Running the Application 🏃‍♂️
 
