@@ -31,6 +31,11 @@ This project is a **Spring Boot-based REST API** for managing an online store. I
 - Integrated **PostgreSQL** with a `docker-compose.yml` file for easy setup.
 - Implemented a **CI/CD pipeline** for automating build, test, and deployment processes.
 
+### Clone from GitHub
+   ```bash
+   https://github.com/veejaymee/store.git
+   ```
+
 ## API Endpoints 📡
 ![all-services.png](ScreenShots/all-services.png)
 ### Order Endpoints
