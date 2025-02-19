@@ -1,0 +1,120 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.0-SNAPSHOT'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.liquibase.gradle' version '2.2.0'
+	id 'com.diffplug.spotless' version '6.25.0'
+	id 'jacoco'
+	id "org.openapi.generator" version "7.2.0"
+}
+
+group = 'com.securitease'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+dependencies {
+	// Add necessary dependencies
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'org.postgresql:postgresql'
+	implementation 'org.liquibase:liquibase-core'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.yaml:snakeyaml:2.0'
+
+
+	implementation 'org.mapstruct:mapstruct:1.6.2'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
+
+	// Jakarta dependencies
+	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+	implementation 'jakarta.annotation:jakarta.annotation-api:2.1.0'
+	implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+	implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+
+	// OpenAPI dependencies
+	implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+	implementation 'io.swagger.core.v3:swagger-annotations:2.2.15'
+	implementation 'io.swagger.core.v3:swagger-core:2.2.15'
+
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.mockito:mockito-core'
+	testImplementation 'org.mockito:mockito-junit-jupiter'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+
+
+}
+
+openApiGenerate {
+	generatorName = "spring"
+	inputSpec = "$rootDir/src/main/resources/store.yml"
+	outputDir = "$buildDir/generated"
+	apiPackage = "com.securitease.store.api"
+	modelPackage = "com.securitease.store.model"
+	generateApiTests = false
+	generateModelTests = false
+	configOptions = [
+			interfaceOnly: "true",
+			useTags: "true",
+			delegatePattern: "false",
+			generateApis: "true",
+			generateModels: "true",
+			generateSupportingFiles: "true",
+			"useJakartaAnnotations": "true",
+			"useJakartaServlet": "true"
+//            "skipValidateSpec": "true"
+	]
+
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs += "$buildDir/generated/src/main/java"
+		}
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+task fixGeneratedImports {
+	doLast {
+		fileTree("$buildDir/generated/src/main/java") {
+			include '**/*.java'
+		}.each { file ->
+			def content = file.text
+			content = content.replace('javax.servlet.http.HttpServletResponse', 'jakarta.servlet.http.HttpServletResponse')
+			content = content.replace('javax.validation.Valid', 'jakarta.validation.Valid')
+			content = content.replace('javax.annotation.Generated', 'jakarta.annotation.Generated')
+			content = content.replace('javax.validation.constraints.*', 'jakarta.validation.constraints.*')
+			file.text = content
+		}
+	}
+}
+
+tasks.named('openApiGenerate') {
+	finalizedBy(fixGeneratedImports)
+}

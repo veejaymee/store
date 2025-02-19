@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres-store-new
+    environment:
+      POSTGRES_DB: store
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5433:5432"
+    networks:
+      - store_network
+
+  store-app:
+    image: store
+    container_name: store-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/store
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - store_network
+
+networks:
+  store_network:
+    driver: bridge

@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1739865742754-1
+      author: developer@securitease.com
+      changes:
+        - sqlFile:
+            path: db.changelog/data-product.sql
